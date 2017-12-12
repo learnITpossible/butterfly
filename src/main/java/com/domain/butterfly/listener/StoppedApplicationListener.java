@@ -1,5 +1,6 @@
 package com.domain.butterfly.listener;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextStoppedEvent;
 
@@ -14,6 +15,9 @@ public class StoppedApplicationListener implements ApplicationListener<ContextSt
     @Override
     public void onApplicationEvent(ContextStoppedEvent event) {
 
+        ApplicationContext context = event.getApplicationContext();
+        System.out.println(context.getApplicationName());
+        System.out.println(context.getId());
         System.out.println("stopped...");
     }
 }

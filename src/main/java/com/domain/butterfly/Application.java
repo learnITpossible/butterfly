@@ -1,12 +1,14 @@
 package com.domain.butterfly;
 
 import com.domain.butterfly.listener.ClosedApplicationListener;
+import com.domain.butterfly.listener.RefreshedApplicationListener;
 import com.domain.butterfly.listener.StartedApplicationListener;
 import com.domain.butterfly.listener.StoppedApplicationListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -20,7 +22,7 @@ import java.util.Date;
  * @since 2017/11/10
  */
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -31,6 +33,7 @@ public class Application {
 
         SpringApplication app = new SpringApplication(Application.class);
         app.addListeners(new StartedApplicationListener());
+        app.addListeners(new RefreshedApplicationListener());
         app.addListeners(new StoppedApplicationListener());
         app.addListeners(new ClosedApplicationListener());
         app.run(args);

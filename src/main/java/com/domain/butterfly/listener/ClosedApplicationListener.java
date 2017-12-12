@@ -1,5 +1,6 @@
 package com.domain.butterfly.listener;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 
@@ -14,6 +15,9 @@ public class ClosedApplicationListener implements ApplicationListener<ContextClo
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
 
+        ApplicationContext context = event.getApplicationContext();
+        System.out.println(context.getApplicationName());
+        System.out.println(context.getId());
         System.out.println("closed...");
     }
 }
