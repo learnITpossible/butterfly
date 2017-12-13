@@ -18,6 +18,10 @@ public class QuartzConfig {
 
     public static final String DEFAULT_GROUP = "group.report";
 
+    public static final String JOB_PREFIX = "job.";
+
+    public static final String TRIGGER_PREFIX = "trigger.";
+
     @Bean
     public Scheduler schedulerFactoryBean() throws SchedulerException {
 

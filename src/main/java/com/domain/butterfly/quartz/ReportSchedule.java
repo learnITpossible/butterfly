@@ -36,46 +36,50 @@ public class ReportSchedule {
     private Scheduler scheduler;
 
     @Autowired
-    ReportConfigRepository reportConfigRepository;
+    ReportRepository reportRepository;
 
     @Scheduled(fixedRate = 10000)
     public void report() {
 
         log.info("The time is now {}", dateFormat.format(new Date()));
         // 从数据库查询"可执行"配置
-        List<ReportConfig> configList = reportConfigRepository.listReportConfig();
+        List<ReportConfig> configList = reportRepository.listReportConfig();
         if (CollectionUtils.isEmpty(configList)) return;
         configList.stream().filter(config -> (config.getSelectSql() != null || config.getStatisticSql() != null) && config.getCronScript() != null)
                 .forEach(config -> {
-                    System.out.println("schedule job...");
-                    JobKey jobKey = new JobKey("job." + config.getName(), QuartzConfig.DEFAULT_GROUP);
+                    log.info("start schedule job, config is " + config);
+                    JobKey jobKey = new JobKey(QuartzConfig.JOB_PREFIX + config.getName(), QuartzConfig.DEFAULT_GROUP);
                     try {
                         // 如果已设置定时任务，删除再新增；如果未设置定时任务，新增
                         if (scheduler.checkExists(jobKey)) {
-
+                            scheduler.deleteJob(jobKey);
                         }
                         JobDetail job = newJob(ReportJob.class)
                                 .withIdentity(jobKey)
                                 .build();
+                        job.getJobDataMap().put("reportConfig", config);
+                        job.getJobDataMap().put("reportRepository", reportRepository);
                         CronTrigger trigger = newTrigger()
-                                .withIdentity("trigger." + config.getName(), QuartzConfig.DEFAULT_GROUP)
-                                //                    .startNow()
-                                .withSchedule(cronSchedule("0 30 14 * * ?"))
+                                .withIdentity(QuartzConfig.TRIGGER_PREFIX + config.getName(), QuartzConfig.DEFAULT_GROUP)
+                                .withSchedule(cronSchedule(config.getCronScript()))
                                 .build();
                         scheduler.scheduleJob(job, trigger);
+                        reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.SCHEDULED.value);
                     } catch (SchedulerException e) {
                         log.error(e.getMessage(), e);
                     }
+                    log.info("end schedule...");
                 });
     }
 
     @PreDestroy
     public void destroy() {
 
+        log.info("destroy reportSchedule...");
         try {
             scheduler.shutdown(true);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

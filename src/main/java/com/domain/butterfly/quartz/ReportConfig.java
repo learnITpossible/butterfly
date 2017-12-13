@@ -11,7 +11,7 @@ import java.util.Date;
 public class ReportConfig {
 
     private int id;
-    private String name = "xxx";
+    private String name;
     private String statisticSql;
     private int statisticSqlType;
     private String selectSql;
