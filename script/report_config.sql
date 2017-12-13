@@ -1,5 +1,5 @@
 CREATE TABLE `report_config` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `statistic_sql` text COMMENT '统计sql',
   `statistic_sql_type` int(4) DEFAULT '0' COMMENT '0-sql；1-存储过程；',
   `select_sql` text,
