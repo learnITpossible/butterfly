@@ -3,6 +3,8 @@ package com.domain.butterfly.quartz;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,8 @@ public class MailManager {
 
     private static final Logger log = LoggerFactory.getLogger(MailManager.class);
 
-    private static final String MAIL_FROM = "dapan_statistics@weyao.com";
+    @Value("${spring.mail.username}")
+    private String mail_from;
 
     @Autowired
     JavaMailSender mailSender;
@@ -32,8 +35,8 @@ public class MailManager {
         MimeMessage msg = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
-            helper.setFrom(MAIL_FROM);
-            helper.setTo(receiverAddress);
+            helper.setFrom(mail_from);
+            helper.setTo(receiverAddress.split(","));
             helper.setSubject(title);
             helper.setText("定时报表");
             String originFileName = file.getName();
@@ -42,6 +45,16 @@ public class MailManager {
         } catch (MessagingException e) {
             log.error(e.getMessage(), e);
         }
+        mailSender.send(msg);
+    }
+
+    public void sendExceptionMail(String exceptionAddress, Exception e) {
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom(mail_from);
+        msg.setTo(exceptionAddress.split(","));
+        msg.setSubject("【异常】报表任务发生异常");
+        msg.setText(e.getMessage());
         mailSender.send(msg);
     }
 }
