@@ -1,5 +1,6 @@
 package com.domain.butterfly.quartz;
 
+import org.apache.commons.lang.StringUtils;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +39,18 @@ public class ReportSchedule {
     @Autowired
     ReportRepository reportRepository;
 
-    @Scheduled(fixedRate = 10000)
+    @Autowired
+    MailManager mailManager;
+
+    @Scheduled(cron = "0/10 * 9-21 * * ?")
     public void report() {
 
         log.info("The time is now {}", dateFormat.format(new Date()));
         // 从数据库查询"可执行"配置
         List<ReportConfig> configList = reportRepository.listReportConfig();
         if (CollectionUtils.isEmpty(configList)) return;
-        configList.stream().filter(config -> (config.getSelectSql() != null || config.getStatisticSql() != null) && config.getCronScript() != null)
+        configList.stream().filter(config -> (StringUtils.isNotEmpty(config.getSelectSql()) || StringUtils.isNotEmpty(config.getStatisticSql()))
+                && StringUtils.isNotEmpty(config.getCronScript()))
                 .forEach(config -> {
                     log.info("start schedule job, config is " + config);
                     JobKey jobKey = new JobKey(QuartzConfig.JOB_PREFIX + config.getName(), QuartzConfig.DEFAULT_GROUP);
@@ -59,12 +64,17 @@ public class ReportSchedule {
                                 .build();
                         job.getJobDataMap().put("reportConfig", config);
                         job.getJobDataMap().put("reportRepository", reportRepository);
+                        job.getJobDataMap().put("mailManager", mailManager);
                         CronTrigger trigger = newTrigger()
                                 .withIdentity(QuartzConfig.TRIGGER_PREFIX + config.getName(), QuartzConfig.DEFAULT_GROUP)
                                 .withSchedule(cronSchedule(config.getCronScript()))
                                 .build();
                         scheduler.scheduleJob(job, trigger);
                         reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.SCHEDULED.value);
+                        // 是否需要立即执行
+                        if (config.getRunImmediately() == ReportConfigConst.RunImmediately.YES.value) {
+                            scheduler.triggerJob(jobKey);
+                        }
                     } catch (SchedulerException e) {
                         log.error(e.getMessage(), e);
                     }

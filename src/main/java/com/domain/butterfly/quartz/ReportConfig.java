@@ -15,7 +15,9 @@ public class ReportConfig {
     private String statisticSql;
     private int statisticSqlType;
     private String selectSql;
+    private String reportName;
     private String cronScript;
+    private int runImmediately;
     private String comment;
     private String receiverMailAddress;
     private String owner;
@@ -73,6 +75,16 @@ public class ReportConfig {
         this.selectSql = selectSql;
     }
 
+    public String getReportName() {
+
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+
+        this.reportName = reportName;
+    }
+
     public String getCronScript() {
 
         return cronScript;
@@ -81,6 +93,16 @@ public class ReportConfig {
     public void setCronScript(String cronScript) {
 
         this.cronScript = cronScript;
+    }
+
+    public int getRunImmediately() {
+
+        return runImmediately;
+    }
+
+    public void setRunImmediately(int runImmediately) {
+
+        this.runImmediately = runImmediately;
     }
 
     public String getComment() {
