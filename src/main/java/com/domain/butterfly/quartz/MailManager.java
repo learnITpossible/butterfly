@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * com.domain.butterfly.quartz
@@ -30,21 +31,17 @@ public class MailManager {
     @Autowired
     JavaMailSender mailSender;
 
-    public void sendMail(String receiverAddress, String title, File file) {
+    public void sendMail(String receiverAddress, String title, File file) throws MessagingException {
 
         MimeMessage msg = mailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
-            helper.setFrom(mail_from);
-            helper.setTo(receiverAddress.split(","));
-            helper.setSubject(title);
-            helper.setText("定时报表");
-            String originFileName = file.getName();
-            String fileName = originFileName.substring(0, originFileName.lastIndexOf("."));
-            helper.addAttachment(fileName, file);
-        } catch (MessagingException e) {
-            log.error(e.getMessage(), e);
-        }
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
+        helper.setFrom(mail_from);
+        helper.setTo(receiverAddress.split(","));
+        helper.setSubject(title);
+        helper.setText("定时报表");
+        String originFileName = file.getName();
+        String fileName = originFileName.substring(0, originFileName.lastIndexOf("."));
+        helper.addAttachment(fileName, file);
         mailSender.send(msg);
     }
 
@@ -54,7 +51,7 @@ public class MailManager {
         msg.setFrom(mail_from);
         msg.setTo(exceptionAddress.split(","));
         msg.setSubject("【异常】报表任务发生异常");
-        msg.setText(e.getMessage());
+        msg.setText(e.toString() + "\r\n" + Arrays.toString(e.getStackTrace()));
         mailSender.send(msg);
     }
 }

@@ -42,11 +42,11 @@ public class ReportSchedule {
     @Autowired
     MailManager mailManager;
 
-    @Scheduled(cron = "0/10 * 9-21 * * ?")
+    @Scheduled(cron = "0/10 * 9-20 ? * MON-FRI")
     public void report() {
 
         log.info("The time is now {}", dateFormat.format(new Date()));
-        // 从数据库查询"可执行"配置
+        // 从数据库查询"待计划"配置信息
         List<ReportConfig> configList = reportRepository.listReportConfig();
         if (CollectionUtils.isEmpty(configList)) return;
         configList.stream().filter(config -> (StringUtils.isNotEmpty(config.getSelectSql()) || StringUtils.isNotEmpty(config.getStatisticSql()))

@@ -34,29 +34,22 @@ public class ReportJob implements Job {
         MailManager mailManager = (MailManager) map.get("mailManager");
 
         log.info("config = " + config);
-
-        reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.RUNNING.value);
-
-        if (!StringUtils.isEmpty(config.getStatisticSql())) {
-            log.info("start statistic...");
-            try {
-                reportRepository.statistic(config.getStatisticSql());
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.EXCEPTION.value);
-                return;
-            }
-        }
-
         try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
+            reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.RUNNING.value);
 
-        if (!StringUtils.isEmpty(config.getSelectSql())) {
-            log.info("start select...");
+            if (!StringUtils.isEmpty(config.getStatisticSql())) {
+                log.info("start statistic...");
+                reportRepository.statistic(config.getStatisticSql());
+            }
+
             try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+
+            if (!StringUtils.isEmpty(config.getSelectSql())) {
+                log.info("start select...");
                 // TODO 如何防止同一时间多个job同时运行可能导致的OOM 1-通过分页拿数据 2-合理规划任务的运行时间
                 List<Map<String, Object>> list = reportRepository.select(config.getSelectSql());
                 // list.forEach(m -> m.forEach((k, v) -> System.out.println(k + "[" + v.getClass() + "]=" + v)));
@@ -64,14 +57,18 @@ public class ReportJob implements Job {
                 File file = ExcelUtil.writeXls(config.getReportName(), list);
                 // send mail
                 mailManager.sendMail(config.getReceiverMailAddress(), config.getReportName(), file);
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
+            }
+
+            reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.COMPLETE.value);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            try {
                 reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.EXCEPTION.value);
-                return;
+                mailManager.sendExceptionMail(config.getExceptionMailAddress(), e);
+            } catch (Exception e1) {
+                log.error(e.getMessage(), e1);
             }
         }
-
-        reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.COMPLETE.value);
 
         log.info("end job...");
     }
