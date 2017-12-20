@@ -42,7 +42,7 @@ public class ReportSchedule {
     @Autowired
     MailManager mailManager;
 
-    @Scheduled(cron = "0/10 * 9-20 ? * MON-FRI")
+    @Scheduled(cron = "0/30 * 9-20 ? * MON-FRI")
     public void report() {
 
         log.info("The time is now {}", dateFormat.format(new Date()));

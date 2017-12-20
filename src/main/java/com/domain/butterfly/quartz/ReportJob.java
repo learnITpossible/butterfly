@@ -56,7 +56,7 @@ public class ReportJob implements Job {
                 // export excel
                 File file = ExcelUtil.writeXls(config.getReportName(), list);
                 // send mail
-                mailManager.sendMail(config.getReceiverMailAddress(), config.getReportName(), file);
+                mailManager.sendMail(config.getReceiverMailAddress(), config.getCopyMailAddress(), config.getBlindCopyMailAddress(), config.getReportName(), file);
             }
 
             reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.COMPLETE.value);

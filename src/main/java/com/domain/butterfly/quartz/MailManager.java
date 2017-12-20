@@ -1,5 +1,6 @@
 package com.domain.butterfly.quartz;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,18 @@ public class MailManager {
     @Autowired
     JavaMailSender mailSender;
 
-    public void sendMail(String receiverAddress, String title, File file) throws MessagingException {
+    public void sendMail(String receiverAddress, String copyAddress, String blindCopyAddress, String title, File file) throws MessagingException {
 
         MimeMessage msg = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
         helper.setFrom(mail_from);
         helper.setTo(receiverAddress.split(","));
+        if (StringUtils.isNotEmpty(copyAddress)) {
+            helper.setCc(copyAddress.split(","));
+        }
+        if (StringUtils.isNotEmpty(blindCopyAddress)) {
+            helper.setBcc(blindCopyAddress.split(","));
+        }
         helper.setSubject(title);
         helper.setText("定时报表");
         String originFileName = file.getName();

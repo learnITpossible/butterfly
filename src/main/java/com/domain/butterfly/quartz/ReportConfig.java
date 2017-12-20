@@ -20,6 +20,8 @@ public class ReportConfig {
     private int runImmediately;
     private String comment;
     private String receiverMailAddress;
+    private String copyMailAddress;
+    private String blindCopyMailAddress;
     private String owner;
     private String exceptionMailAddress;
     private int status;
@@ -123,6 +125,26 @@ public class ReportConfig {
     public void setReceiverMailAddress(String receiverMailAddress) {
 
         this.receiverMailAddress = receiverMailAddress;
+    }
+
+    public String getCopyMailAddress() {
+
+        return copyMailAddress;
+    }
+
+    public void setCopyMailAddress(String copyMailAddress) {
+
+        this.copyMailAddress = copyMailAddress;
+    }
+
+    public String getBlindCopyMailAddress() {
+
+        return blindCopyMailAddress;
+    }
+
+    public void setBlindCopyMailAddress(String blindCopyMailAddress) {
+
+        this.blindCopyMailAddress = blindCopyMailAddress;
     }
 
     public String getOwner() {
