@@ -1,4 +1,4 @@
-package com.domain.butterfly.quartz;
+package com.domain.butterfly.mail;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -46,9 +46,7 @@ public class MailManager {
         }
         helper.setSubject(title);
         helper.setText("定时报表");
-        String originFileName = file.getName();
-        String fileName = originFileName.substring(0, originFileName.lastIndexOf("."));
-        helper.addAttachment(fileName, file);
+        helper.addAttachment(file.getName(), file);
         mailSender.send(msg);
     }
 

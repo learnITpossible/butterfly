@@ -1,5 +1,6 @@
-package com.domain.butterfly.quartz;
+package com.domain.butterfly.dao;
 
+import com.domain.butterfly.entity.ReportConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

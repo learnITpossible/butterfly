@@ -1,5 +1,10 @@
 package com.domain.butterfly.quartz;
 
+import com.domain.butterfly.constant.ReportConfigConst;
+import com.domain.butterfly.dao.ReportRepository;
+import com.domain.butterfly.entity.ReportConfig;
+import com.domain.butterfly.mail.MailManager;
+import com.domain.butterfly.util.ExportUtil;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -53,8 +58,8 @@ public class ReportJob implements Job {
                 // TODO 如何防止同一时间多个job同时运行可能导致的OOM 1-通过分页拿数据 2-合理规划任务的运行时间
                 List<Map<String, Object>> list = reportRepository.select(config.getSelectSql());
                 // list.forEach(m -> m.forEach((k, v) -> System.out.println(k + "[" + v.getClass() + "]=" + v)));
-                // export excel
-                File file = ExcelUtil.writeXls(config.getReportName(), list);
+                // export
+                File file = ExportUtil.export(config.getExportFileType(), config.getReportName(), list);
                 // send mail
                 mailManager.sendMail(config.getReceiverMailAddress(), config.getCopyMailAddress(), config.getBlindCopyMailAddress(), config.getReportName(), file);
             }

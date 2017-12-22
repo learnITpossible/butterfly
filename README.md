@@ -8,4 +8,8 @@
 1. JdbcTemplate
 
 ## TODO
-1. 监听job异常，发送异常邮件
+
+1. 集成spring cloud config
+1. logback根据spring profile更改level
+1. 增加导出文件类型export_file_type：csv、xls、xlsx
+1. 邮件发送的内容通过配置加载，并增加超级接收员

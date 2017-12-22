@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+  <appender name="DailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>/data/logs/butterfly.log</file>
+    <encoder>
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>butterfly.%d{yyyy-MM-dd}.log</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <logger name="com.domain.butterfly" level="INFO">
+    <appender-ref ref="DailyRollingFileAppender" />
+  </logger>
+</configuration>

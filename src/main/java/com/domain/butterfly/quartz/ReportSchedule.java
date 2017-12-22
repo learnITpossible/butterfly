@@ -1,5 +1,9 @@
 package com.domain.butterfly.quartz;
 
+import com.domain.butterfly.mail.MailManager;
+import com.domain.butterfly.constant.ReportConfigConst;
+import com.domain.butterfly.dao.ReportRepository;
+import com.domain.butterfly.entity.ReportConfig;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.*;
 import org.slf4j.Logger;

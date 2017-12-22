@@ -1,4 +1,4 @@
-package com.domain.butterfly.quartz;
+package com.domain.butterfly.entity;
 
 import java.util.Date;
 
@@ -15,6 +15,7 @@ public class ReportConfig {
     private String statisticSql;
     private int statisticSqlType;
     private String selectSql;
+    private int exportFileType;
     private String reportName;
     private String cronScript;
     private int runImmediately;
@@ -75,6 +76,16 @@ public class ReportConfig {
     public void setSelectSql(String selectSql) {
 
         this.selectSql = selectSql;
+    }
+
+    public int getExportFileType() {
+
+        return exportFileType;
+    }
+
+    public void setExportFileType(int exportFileType) {
+
+        this.exportFileType = exportFileType;
     }
 
     public String getReportName() {
