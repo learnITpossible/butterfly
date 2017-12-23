@@ -63,6 +63,8 @@ public class ExcelUtil {
 
     private static void writeExcel(List<Map<String, Object>> dataList, File excel, Workbook book) {
 
+        CreationHelper helper = book.getCreationHelper();
+
         CellStyle style = book.createCellStyle();
         style.setAlignment(CellStyle.ALIGN_CENTER);
 
@@ -82,7 +84,7 @@ public class ExcelUtil {
             Cell cell = row.createCell(column);
             cell.setCellStyle(style);
             String text = heads.get(column);
-            cell.setCellValue(text);
+            cell.setCellValue(helper.createRichTextString(text));
         }
 
         for (int index = 0; index < dataList.size();) {
@@ -107,7 +109,7 @@ public class ExcelUtil {
                                 // 是数字当作double处理
                                 cell.setCellValue(Double.parseDouble(text));
                             } else {
-                                cell.setCellValue(text);
+                                cell.setCellValue(helper.createRichTextString(text));
                             }
                         }
                     }

@@ -4,6 +4,7 @@ import java.util.Date;
 
 /**
  * com.domain.butterfly.quartz
+ *
  * @author Mark Li
  * @version 1.0.0
  * @since 2017/12/13
@@ -200,20 +201,6 @@ public class ReportConfig {
 
     @Override
     public String toString() {
-
-        return "ReportConfig{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", statisticSql='" + statisticSql + '\'' +
-                ", statisticSqlType=" + statisticSqlType +
-                ", selectSql='" + selectSql + '\'' +
-                ", cronScript='" + cronScript + '\'' +
-                ", comment='" + comment + '\'' +
-                ", receiverMailAddress='" + receiverMailAddress + '\'' +
-                ", owner='" + owner + '\'' +
-                ", exceptionMailAddress='" + exceptionMailAddress + '\'' +
-                ", status=" + status +
-                ", createTime=" + createTime +
-                '}';
+        return "ReportConfig{" + "id=" + id + ", name='" + name + '\'' + ", statisticSql='" + statisticSql + '\'' + ", statisticSqlType=" + statisticSqlType + ", selectSql='" + selectSql + '\'' + ", exportFileType=" + exportFileType + ", reportName='" + reportName + '\'' + ", cronScript='" + cronScript + '\'' + ", runImmediately=" + runImmediately + ", comment='" + comment + '\'' + ", receiverMailAddress='" + receiverMailAddress + '\'' + ", copyMailAddress='" + copyMailAddress + '\'' + ", blindCopyMailAddress='" + blindCopyMailAddress + '\'' + ", owner='" + owner + '\'' + ", exceptionMailAddress='" + exceptionMailAddress + '\'' + ", status=" + status + ", createTime=" + createTime + '}';
     }
 }
