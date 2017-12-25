@@ -9,7 +9,7 @@
       <pattern>${FILE_LOG_PATTERN}</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>butterfly.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <fileNamePattern>/data/logs/butterfly.%d{yyyy-MM-dd}.log</fileNamePattern>
     </rollingPolicy>
   </appender>
 

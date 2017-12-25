@@ -78,6 +78,7 @@ public class ReportSchedule {
                         // 是否需要立即执行
                         if (config.getRunImmediately() == ReportConfigConst.RunImmediately.YES.value) {
                             scheduler.triggerJob(jobKey);
+                            reportRepository.stopRunImmediately(config.getId());
                         }
                     } catch (SchedulerException e) {
                         log.error(e.getMessage(), e);
@@ -95,5 +96,7 @@ public class ReportSchedule {
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
         }
+        // TODO 存储已计划的任务；或者启动时自动加载
+        reportRepository.recoverConfigStatus();
     }
 }

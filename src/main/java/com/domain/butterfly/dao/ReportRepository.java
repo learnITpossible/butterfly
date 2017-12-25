@@ -35,6 +35,16 @@ public class ReportRepository {
         });
     }
 
+    public void recoverConfigStatus() {
+
+        jdbcTemplate.update("update report_config set status = 1 where status in (2, 4)");
+    }
+
+    public void stopRunImmediately(int id) {
+
+        jdbcTemplate.update("update report_config set run_immediately = 0 where id = ?", preparedStatement -> preparedStatement.setInt(1, id));
+    }
+
     public void statistic(String sql) {
 
         jdbcTemplate.execute(sql);
