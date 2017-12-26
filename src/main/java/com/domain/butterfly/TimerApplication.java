@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2017/11/10
  */
 @SpringBootApplication
-public class Application {
+public class TimerApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(TimerApplication.class, args);
     }
 }

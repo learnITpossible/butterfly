@@ -38,7 +38,7 @@ public class ReportJob implements Job {
         ReportRepository reportRepository = (ReportRepository) map.get("reportRepository");
         MailManager mailManager = (MailManager) map.get("mailManager");
 
-        log.info("config = " + config);
+        log.info("config = {}", config);
         try {
             reportRepository.updateConfigStatus(config.getId(), ReportConfigConst.Status.RUNNING.value);
 

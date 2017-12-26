@@ -1,31 +1,6 @@
 spring:
-    datasource:
-        driver-class-name: com.mysql.jdbc.Driver
-        hikari:
-            connection-timeout: 30000
-            data-source-properties:
-                cachePrepStmts: true
-                cacheResultSetMetadata: true
-                cacheServerConfiguration: true
-                elideSetAutoCommits: true
-                maintainTimeStats: false
-                prepStmtCacheSize: 250
-                prepStmtCacheSqlLimit: 2048
-                rewriteBatchedStatements: true
-                useLocalSessionState: true
-                useLocalTransactionState: true
-                useServerPrepStmts: true
-            idle-timeout: 600000
-            max-lifetime: 1800000
-            maximum-pool-size: 15
-        password: 123456
-        type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://localhost:3306/report?useUnicode=yes&characterEncoding=utf8&autoReconnect=true&useSSL=false
-        username: root
-    mail:
-        default-encoding: UTF-8
-        host:
-        password:
-        protocol: smtp
-        username:
-debug: true
+  application:
+    name: @project.name@
+  cloud:
+    config:
+      profile: @env@

@@ -1,14 +1,15 @@
 package com.domain.butterfly.quartz;
 
-import com.domain.butterfly.mail.MailManager;
 import com.domain.butterfly.constant.ReportConfigConst;
 import com.domain.butterfly.dao.ReportRepository;
 import com.domain.butterfly.entity.ReportConfig;
+import com.domain.butterfly.mail.MailManager;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -46,17 +47,21 @@ public class ReportSchedule {
     @Autowired
     MailManager mailManager;
 
+    @Value("${spring.mail.admin}")
+    String mailAdmin;
+
     @Scheduled(cron = "0/30 * 9-20 ? * MON-FRI")
     public void report() {
 
         log.info("The time is now {}", dateFormat.format(new Date()));
+        log.info("mail admin = {}", mailAdmin);
         // 从数据库查询"待计划"配置信息
         List<ReportConfig> configList = reportRepository.listReportConfig();
         if (CollectionUtils.isEmpty(configList)) return;
         configList.stream().filter(config -> (StringUtils.isNotEmpty(config.getSelectSql()) || StringUtils.isNotEmpty(config.getStatisticSql()))
                 && StringUtils.isNotEmpty(config.getCronScript()))
                 .forEach(config -> {
-                    log.info("start schedule job, config is " + config);
+                    log.info("start schedule job, config is {}", config);
                     JobKey jobKey = new JobKey(QuartzConfig.JOB_PREFIX + config.getName(), QuartzConfig.DEFAULT_GROUP);
                     try {
                         // 如果已设置定时任务，删除再新增；如果未设置定时任务，新增
