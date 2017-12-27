@@ -9,7 +9,6 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -47,14 +46,10 @@ public class ReportSchedule {
     @Autowired
     MailManager mailManager;
 
-    @Value("${spring.mail.admin}")
-    String mailAdmin;
-
     @Scheduled(cron = "0/30 * 9-20 ? * MON-FRI")
     public void report() {
 
         log.info("The time is now {}", dateFormat.format(new Date()));
-        log.info("mail admin = {}", mailAdmin);
         // 从数据库查询"待计划"配置信息
         List<ReportConfig> configList = reportRepository.listReportConfig();
         if (CollectionUtils.isEmpty(configList)) return;

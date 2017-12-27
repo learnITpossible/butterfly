@@ -18,9 +18,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.*;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * com.domain.butterfly.quartz
@@ -30,12 +28,16 @@ import java.util.Properties;
  * @since 2017/12/14
  */
 @Component
+//@RefreshScope
 public class MailManager {
 
     private static final Logger log = LoggerFactory.getLogger(MailManager.class);
 
     @Value("${spring.mail.username}")
     private String mailFrom;
+
+    @Value("${spring.mail.admin}")
+    private String mailAdmin;
 
     @Autowired
     JavaMailSender mailSender;
@@ -120,7 +122,9 @@ public class MailManager {
 
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setFrom(mailFrom);
-        msg.setTo(exceptionAddress.split(","));
+        List<String> addressList = new ArrayList<>(Arrays.asList(exceptionAddress.split(",")));
+        addressList.add(mailAdmin);
+        msg.setTo(addressList.toArray(new String[addressList.size()]));
         msg.setSubject("【异常】报表任务发生异常");
         msg.setText(e.toString() + "\r\n" + Arrays.toString(e.getStackTrace()));
         mailSender.send(msg);
